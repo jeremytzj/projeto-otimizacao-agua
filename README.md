@@ -68,6 +68,7 @@ Este projeto requer Python 3.x e as bibliotecas listadas no arquivo `requirement
 ```
 pandas
 pyomo
+openpyxl
 gurobipy
 ```
 
