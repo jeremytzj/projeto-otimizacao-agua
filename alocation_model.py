@@ -48,6 +48,7 @@ for _, i in distribuicao.iterrows():
     sys, mun, vol = i['Sistema Integrado'], i['Municipio'], i['Volume Maximo'] 
     v[(sys,mun)] = vol
 
+v
 
 # inicializa o modelo
 
@@ -71,9 +72,11 @@ model.d = Param(model.T, initialize=d)
 #variaveis de decisao
 model.x = Var(model.I, model.J, model.T, domain=NonNegativeReals)
 
+
+
 # funcao objetiva
 def obj(model):
-    return sum(model.x[i,j,t]*(model.pe[i,t] + model.pt[i,t]) for i in model.I for j in model.J for t in model.T)
+    return sum(model.x[i,j,t]*(model.pe[i,t] + model.pt[i,t])for i in model.I for j in model.J for t in model.T)
 
 model.obj = Objective(rule=obj, sense=minimize)
 
@@ -92,14 +95,44 @@ model.fluxo_maximo = ConstraintList()
 for i in model.I:
     for j in model.J:
         for t in model.T:
-            model.fluxo_maximo.add(expr=model.x[i,j,t]<= model.v[i,j])
+            model.fluxo_maximo.add(expr=model.x[i,j,t] <= model.v[i,j])
 
 model.volume_minimo = ConstraintList()
-for t in model.T:
+for t in model.T:    
     model.volume_minimo.add(expr=sum(model.x[i,j,t] for i in model.I for j in model.J) >= model.d[t])
+
+
 #resolvendo o modelo
 
 import gurobipy
 
 solver = SolverFactory('gurobi')
-solver.solve(model)
+results = solver.solve(model)
+
+
+# --- 4. RESOLUÇÃO DO MODELO ---
+results = solver.solve(model)
+
+status = results.solver.termination_condition
+if status == TerminationCondition.optimal or status == TerminationCondition.feasible:
+    print(f"Custo Total Mínimo: R$ {value(model.obj):,.2f}")
+else:
+    print("Modelo inviável — pulando impressão do objetivo.")
+
+
+
+
+with pd.ExcelWriter('./dados/distribuicao.xlsx', engine='openpyxl') as writer:
+    x_list = []
+    for i in model.I:
+        for j in model.J:
+            for t in model.T:
+                if (i, j, t) in model.x:
+                    x_list.append({
+                        'Sistema': i,
+                        'Municipio': j,
+                        'Mes': t,
+                        'Fluxo': model.x[i, j, t].value
+                    })
+    df_x = pd.DataFrame(x_list)
+    df_x.to_excel(writer, sheet_name='Distribuicao de agua', index=False)
