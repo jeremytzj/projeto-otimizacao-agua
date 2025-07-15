@@ -114,7 +114,8 @@ if status not in (TerminationCondition.optimal,
                   TerminationCondition.feasible):
     raise RuntimeError(f'Modelo ainda inviável: {status}')
 
-print(f'Custo ótimo: R$ {value(model.obj):,.2f}')
+custo_otimizado = value(model.obj)
+print(f'Custo ótimo: R$ {custo_otimizado:,.2f}')
 
 
 custo_tratamento = 0
