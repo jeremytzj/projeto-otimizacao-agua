@@ -40,15 +40,13 @@ D = {
 d = {}
 for _,i in demanda.iterrows():
     d[i["Mes"]] = i["Volume Minimo"]
-d
+
 
 
 v = {}
 for _, i in distribuicao.iterrows():
     sys, mun, vol = i['Sistema Integrado'], i['Municipio'], i['Volume Maximo'] 
     v[(sys,mun)] = vol
-
-v
 
 # inicializa o modelo
 
