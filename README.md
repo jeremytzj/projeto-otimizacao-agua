@@ -47,6 +47,15 @@ Este projeto requer Python 3.x e as bibliotecas listadas no arquivo `requirement
 1.  **Instale o Gurobi Solver:**
     Siga as instruções de instalação no [site oficial do Gurobi](https://www.gurobi.com/downloads/gurobi-software/). Uma licença acadêmica gratuita está disponível.
 
+    ***Se não tiver o Gurobi, utilize o Highs, que é open source.*** 
+
+```
+import highspy
+
+solver = SolverFactory('highs')
+solver.solve(model)
+```
+
 2.  **Clone o repositório:**
     ```bash
     git clone [https://github.com/seu-usuario/projeto-otimizacao-agua.git](https://github.com/seu-usuario/projeto-otimizacao-agua.git)
@@ -86,14 +95,7 @@ python alocation_model.py
 
 ````
 O script irá carregar os dados, construir o modelo de otimização, resolver o problema usando o Gurobi e imprimir os resultados no console. Modificações podem ser feitas no final do script para salvar os resultados em um arquivo.
-Se não tiver o Gurobi, utilize o Highs, que é open source. 
 
-```
-import highspy
-
-solver = SolverFactory('highs')
-solver.solve(model)
-```
 
 ### Citação
 Este trabalho é uma implementação computacional baseada na metodologia e nos dados apresentados na seguinte tese:
