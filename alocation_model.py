@@ -121,7 +121,7 @@ print(f'Custo ótimo: R$ {custo_otimizado:,.2f}')
 custo_tratamento = 0
 custo_energia = 0
 
-with pd.ExcelWriter('./dados/distribuicao.xlsx', engine='openpyxl') as writer:
+with pd.ExcelWriter('./resultados/distribuicao.xlsx', engine='openpyxl') as writer:
     x_list = []
     for i in model.I:
         for j in model.J:
@@ -299,7 +299,7 @@ for i in model.I:
 print("\n3. EXPORTANDO RESULTADOS PARA ANÁLISE...")
 print("-" * 40)
 
-with pd.ExcelWriter('./dados/analise_sensibilidade.xlsx', engine='openpyxl') as writer:
+with pd.ExcelWriter('./resultados/analise_sensibilidade.xlsx', engine='openpyxl') as writer:
     # Variáveis Duais
     if duais_producao:
         df_duais_prod = pd.DataFrame(duais_producao)
